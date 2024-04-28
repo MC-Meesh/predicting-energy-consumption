@@ -5,9 +5,10 @@
 - Michael Chase Allen, CWID: 10857234
 - The primary language used in this project is **Python**
 - Code structure defined below
-- Code running is defined below
+- Instructions to run the code is defined below
 
 # Code Structure
+
 
 
 ## `readme.txt` Requirements
