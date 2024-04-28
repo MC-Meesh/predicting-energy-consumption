@@ -2,9 +2,10 @@ import pandas as pd
 import utils
 
 class DataLoader:
-    def __init__(self, file_path):
+    def __init__(self, file_path, show_data=False):
         self.file_path = file_path
         self.df = None
+        self.show_data = show_data
 
     def load_data(self):
         utils.print_color('Loading data from:', self.file_path, color='green')
@@ -12,6 +13,10 @@ class DataLoader:
                               infer_datetime_format=True, low_memory=False, na_values=['nan','?'],
                               index_col='dt')
         utils.print_color('Data loaded', color='green')
+        
+        if self.show_data:
+            print(self.df.head())
+        
         return self.df
     
     def clean_data(self):
@@ -29,6 +34,10 @@ class DataLoader:
             utils.print_color(f'Warning: There are {self.df.isna().sum().sum()} NaN value in the data after imputing', color='yellow')
 
         utils.print_color('Data cleaned', color='green')
+
+        if self.show_data:
+            print(self.df.head())
+
         return self.df
 
     def get_data(self):
