@@ -10,13 +10,24 @@ class DataLoader:
         self.df = pd.read_csv(self.file_path, sep=';', parse_dates={'dt':['Date','Time']},
                               infer_datetime_format=True, low_memory=False, na_values=['nan','?'],
                               index_col='dt')
-        utils.print_bold('Data loaded from:', self.file_path)
+        utils.print_color('Data loaded from:', self.file_path, color='green')
         return self.df
     
     def clean_data(self):
-        self.df = self.df.fillna(self.df.mean()) #fill missing values with mean of column
-        utils.print_bold('Data cleaned')
-        print(self.df.isna().sum())
+        for column in self.df.columns:
+            if self.df[column].dtype == 'object':
+                self.df[column].fillna(self.df[column].mode()[0], inplace=True) #impute missing values with most frequent value
+                utils.print_bold_vars('Imputed missing values in column:', column, 'with mode:', self.df[column].mode()[0])
+            else:
+                self.df[column].fillna(self.df[column].mean(), inplace=True) #impute missing values with mean of column
+                utils.print_bold_vars('Imputed missing values in column:', column, 'with mean:', self.df[column].mean())
+        
+        utils.print_color('NaN values imputed', color='green')
+
+        if self.df.isna().sum().sum() != 0:
+            utils.print_color(f'Warning: There are {self.df.isna().sum().sum()} NaN value in the data after imputing', color='yellow')
+
+        utils.print_color('Data cleaned', color='green')
         return self.df
 
     def get_data(self):
