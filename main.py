@@ -6,6 +6,7 @@ main.py
 '''
 
 # User defined modules
+import utils
 import data_loader as dl
 import data_preprocessor as dp
 import eda as eda
@@ -26,8 +27,6 @@ if __name__ == '__main__':
     file_path = args.file_path
     doEDA = args.eda
 
-    print(doEDA)
-
     ## Load Data
 
     data_loader = dl.DataLoader(file_path) #instantiate data loader
@@ -40,6 +39,8 @@ if __name__ == '__main__':
     if doEDA:
         plotter = eda.DataFramePlotter(df, 'dt') #instantiate DataFramePlotter
         plotter.plot() #plot data
+    else:
+        utils.print_color('EDA disabled, use "-eda" flag to enable', color='yellow')
 
     ## Preprocess Data
 

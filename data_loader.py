@@ -7,10 +7,11 @@ class DataLoader:
         self.df = None
 
     def load_data(self):
+        utils.print_color('Loading data from:', self.file_path, color='green')
         self.df = pd.read_csv(self.file_path, sep=';', parse_dates={'dt':['Date','Time']},
                               infer_datetime_format=True, low_memory=False, na_values=['nan','?'],
                               index_col='dt')
-        utils.print_color('Data loaded from:', self.file_path, color='green')
+        utils.print_color('Data loaded', color='green')
         return self.df
     
     def clean_data(self):
