@@ -7,3 +7,4 @@ household_power_consumption.txt
 
 # Python files
 __pycache__
+venv/
