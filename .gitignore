@@ -1,4 +1,9 @@
-household_power_consumption.txt
-__pycache__
-
+# Data files
 /data
+household_power_consumption.txt
+
+# Plots and outputs
+/outputs
+
+# Python files
+__pycache__

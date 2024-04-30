@@ -1,18 +1,13 @@
-import keras
+import utils
+import numpy as np
+
 from keras.layers import Dense
 from keras.models import Sequential
-from keras.utils import to_categorical
-from keras.optimizers import SGD 
-from keras.callbacks import EarlyStopping
-#from keras.utils import np_utils
-import itertools
 from keras.layers import LSTM
-from keras.layers import Dropout
 from sklearn.model_selection import train_test_split
-import numpy as np
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
-import utils
+
 
 import matplotlib.pyplot as plt
 
@@ -43,7 +38,7 @@ class MyLSTM():
         
     def create_model(self):
         model = Sequential()
-        model.add(LSTM(300, activation='relu', input_shape=(self.X_train.shape[1], self.X_train.shape[2])))
+        model.add(LSTM(200, activation='relu', input_shape=(self.X_train.shape[1], self.X_train.shape[2])))
         model.add(Dense(1))
         model.compile(optimizer='adam', loss='mse')
         self.model = model
@@ -51,6 +46,7 @@ class MyLSTM():
 
     def fit_model(self, epochs=20, batch_size=70):
         history = self.model.fit(self.X_train, self.y_train, epochs=epochs, batch_size=batch_size, validation_data=(self.X_test, self.y_test), verbose=2, shuffle=False)
+        self.history = history
 
         if self.show_data:
             plt.plot(history.history['loss'])
@@ -59,7 +55,8 @@ class MyLSTM():
             plt.ylabel('loss')
             plt.xlabel('epoch')
             plt.legend(['train', 'test'], loc='upper right')
-            plt.show()
+            plt.savefig('outputs/model_loss.png')
+            utils.print_color('Model loss saved to: model_loss.png', color='green')
         
         return history
 
@@ -87,48 +84,64 @@ class MyLSTM():
 
         # Calculate RMSE
         rmse = np.sqrt(mean_squared_error(inv_y, inv_yhat))
-        utils.print_bold('Test RMSE: %.3f' % rmse)
+        utils.print_color('Test RMSE: %.3f' % rmse, color='green')
 
+        utils.print_color('Creating predictions for test data', color='green')
+        model_preds_path = 'outputs/model_preds'
         # Prepare data for plot
         times = range(len(self.y_test))
 
-        plt.plot(times, inv_y, marker='.', label="actual")
-        plt.plot(times, inv_yhat, 'r', label="prediction")
+        plt.figure(figsize=(18, 6)) # Need a larger figure size for the plot
+        plt.plot(times, inv_y, marker='.', color='blue', label="actual")
+        plt.plot(times, inv_yhat, marker='.', color='orange', label="prediction")
         plt.ylabel('Global_active_power', size=15)
         plt.xlabel('Time step', size=15)
         plt.legend(fontsize=15)
-        plt.show()
+        plt.savefig(f'{model_preds_path}.png')
+        utils.print_color(f'Predictions plot saved to: {model_preds_path}.png', color='green')
 
-        residuals = inv_y - inv_yhat
-        plt.scatter(range(len(residuals)), residuals)
-        plt.xlabel('Time step')
-        plt.ylabel('Residual')
-        plt.title('Residual Plot')
-        plt.show()
+        if self.show_data:
+            utils.print_color('Saving model evaluation plots [show_data enabled]', color='green')
+            details_path = 'outputs/residual_details'
 
-        plt.hist(residuals, bins=30)
-        plt.xlabel('Residual')
-        plt.ylabel('Frequency')
-        plt.title('Histogram of Residuals')
-        plt.show()
-    
+            fig, axs = plt.subplots(2, 2, figsize=(15, 10))
+        
+            # Residual Plot
+            residuals = inv_y - inv_yhat
+            axs[0, 0].scatter(range(len(residuals)), residuals)
+            axs[0, 0].set_xlabel('Time step')
+            axs[0, 0].set_ylabel('Residual')
+            axs[0, 0].set_title('Residual Plot')
 
-        plt.scatter(inv_y, inv_yhat)
-        plt.xlabel('Actual')
-        plt.ylabel('Predicted')
-        plt.title('Actual vs Predicted')
-        plt.plot([min(inv_y), max(inv_y)], [min(inv_y), max(inv_y)], color='red')  # Diagonal line
-        plt.show()
+            # Histogram of Residuals
+            axs[0, 1].hist(residuals, bins=30)
+            axs[0, 1].set_xlabel('Residual')
+            axs[0, 1].set_ylabel('Frequency')
+            axs[0, 1].set_title('Histogram of Residuals')
 
-        plt.plot(self.history['rmse'])
-        plt.xlabel('Epoch')
-        plt.ylabel('RMSE')
-        plt.title('RMSE Over Time')
-        plt.show()
+            # Actual vs Predicted
+            axs[1, 0].scatter(inv_y, inv_yhat)
+            axs[1, 0].set_xlabel('Actual')
+            axs[1, 0].set_ylabel('Predicted')
+            axs[1, 0].set_title('Actual vs Predicted')
+            axs[1, 0].plot([min(inv_y), max(inv_y)], [min(inv_y), max(inv_y)], color='red')  # Diagonal line
 
+            # RMSE Over Time
+            axs[1, 1].plot(self.history.history['loss'])
+            axs[1, 1].set_xlabel('Epoch')
+            axs[1, 1].set_ylabel('Loss')
+            axs[1, 1].set_title('MSE Over Time')
+
+            plt.tight_layout()
+            plt.savefig(f'{details_path}.png')
+            utils.print_color(f'Details saved to: {details_path}.png', color='green')
 
     def get_model(self):
         return self.model
+    
+    def save_model(self, path):
+        self.model.save('outputs/' + path)
+        utils.print_bold(f'Model saved to: {path}')
     
 
         

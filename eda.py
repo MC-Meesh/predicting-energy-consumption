@@ -27,7 +27,7 @@ class DataFramePlotter:
                     self.plot_quantitative(ax, column)
 
         plt.tight_layout()
-        plt.savefig('eda.png')
+        plt.savefig('outputs/eda.png')
         
         utils.print_color('Plotting complete, saved to eda.png' , color='green')
 
