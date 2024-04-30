@@ -8,7 +8,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 
-
 import matplotlib.pyplot as plt
 
 class MyLSTM():
@@ -146,8 +145,9 @@ class MyLSTM():
         return self.model
     
     def save_model(self, path):
-        self.model.save('outputs/' + path)
+        if not path.endswith(('.keras', '.h5')):
+            path += '.keras'
+        self.model.save(path)
         utils.print_bold(f'Model saved to: {path}')
-    
 
         
