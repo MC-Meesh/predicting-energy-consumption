@@ -38,7 +38,7 @@ class MyLSTM():
         
     def create_model(self):
         model = Sequential()
-        model.add(LSTM(200, activation='relu', input_shape=(self.X_train.shape[1], self.X_train.shape[2])))
+        model.add(LSTM(300, activation='relu', input_shape=(self.X_train.shape[1], self.X_train.shape[2])))
         model.add(Dense(1))
         model.compile(optimizer='adam', loss='mse')
         self.model = model
