@@ -18,7 +18,7 @@ Predicting energy consumption is vital for effective energy management, enabling
 
 `data_preprocessor.py`: Contains a definition for the *TimeSeriesPreprocessor* class, responsible for cleaning the data and creating lag features used to feed into RNN-based architectures  like LSTMs.
 
-`LSTM.py`: This file defines the *MyLSTM* class, which encapsulates the functionality of a Long Short-Term Memory (LSTM) model. The class includes methods for splitting the data, creating the model, fitting the model, making predictions, getting the model, and saving the model.'
+`LSTM.py`: This file defines the *MyLSTM* class, which encapsulates the functionality of a Long Short-Term Memory (LSTM) model. The class includes methods for splitting the data, creating the model, fitting the model, making predictions, getting the model, and saving the model.
 
 ### Other
 
