@@ -54,19 +54,13 @@ if __name__ == '__main__':
 
     preprocessor = dp.TimeSeriesPreprocessor(df, showData) #instantiate TimeSeriesPreprocessor
     preprocessor.resample_data('h') #resample data
-    preprocessor.rescale_data() #could add feature range as a parameter
     preprocessor.series_to_supervised(n_in=lag_count) #preprocess data
     preprocessor.drop_columns() #drop (non-train || non-target) columns
+    preprocessor.rescale_data() #could add feature range as a parameter
     df = preprocessor.get_data() #get preprocessed data
 
-    ## Define Model
+    ## Define, Train, and Evaluate Model
 
     lstm_model = lstm.MyLSTM(df, showData, split=split) #instantiate LSTM class
     lstm_model.fit_model() #fit model
     lstm_model.predict(scaler=preprocessor.get_scaler()) #plot loss
-
-    ## Train Model
-
-
-
-    ## Evaluate Model

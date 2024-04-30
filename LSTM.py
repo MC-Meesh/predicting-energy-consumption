@@ -12,6 +12,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
+import utils
 
 import matplotlib.pyplot as plt
 
@@ -42,7 +43,7 @@ class MyLSTM():
         
     def create_model(self):
         model = Sequential()
-        model.add(LSTM(100, activation='relu', input_shape=(self.X_train.shape[1], self.X_train.shape[2])))
+        model.add(LSTM(300, activation='relu', input_shape=(self.X_train.shape[1], self.X_train.shape[2])))
         model.add(Dense(1))
         model.compile(optimizer='adam', loss='mse')
         self.model = model
@@ -62,22 +63,72 @@ class MyLSTM():
         
         return history
 
-    def predict(self, scaler : MinMaxScaler):
-        y_hat = self.model.predict(self.X_test)
-        y_hat = y_hat.reshape(-1, 1)
-        scaler.inverse_transform(y_hat)
+    def predict(self, scaler):
+        # Get the number of features
+        n_features = self.X_test.shape[2]
+
+        # Make a prediction
+        yhat = self.model.predict(self.X_test)
+
+        # Reshape X_test
+        self.X_test = self.X_test.reshape((self.X_test.shape[0], n_features))
+
+        # Prepare data for inverse scaling
+        yhat_data = np.concatenate((yhat, self.X_test[:, -n_features:]), axis=1)
+        y_test_data = np.concatenate((self.y_test.reshape((len(self.y_test), 1)), self.X_test[:, -n_features:]), axis=1)
 
         # Invert scaling for forecast
-        print(y_hat)
+        inv_yhat = scaler.inverse_transform(yhat_data)
+        inv_yhat = inv_yhat[:,0]
 
+        # Invert scaling for actual
+        inv_y = scaler.inverse_transform(y_test_data)
+        inv_y = inv_y[:,0]
 
-        # rmse = np.sqrt(mean_squared_error(inv_y, inv_yhat))
-        # print('Test RMSE: %.3f' % rmse)
+        # Calculate RMSE
+        rmse = np.sqrt(mean_squared_error(inv_y, inv_yhat))
+        utils.print_bold('Test RMSE: %.3f' % rmse)
 
-        # return self.model.predict(X)
+        # Prepare data for plot
+        times = range(len(self.y_test))
+
+        plt.plot(times, inv_y, marker='.', label="actual")
+        plt.plot(times, inv_yhat, 'r', label="prediction")
+        plt.ylabel('Global_active_power', size=15)
+        plt.xlabel('Time step', size=15)
+        plt.legend(fontsize=15)
+        plt.show()
+
+        residuals = inv_y - inv_yhat
+        plt.scatter(range(len(residuals)), residuals)
+        plt.xlabel('Time step')
+        plt.ylabel('Residual')
+        plt.title('Residual Plot')
+        plt.show()
+
+        plt.hist(residuals, bins=30)
+        plt.xlabel('Residual')
+        plt.ylabel('Frequency')
+        plt.title('Histogram of Residuals')
+        plt.show()
     
+
+        plt.scatter(inv_y, inv_yhat)
+        plt.xlabel('Actual')
+        plt.ylabel('Predicted')
+        plt.title('Actual vs Predicted')
+        plt.plot([min(inv_y), max(inv_y)], [min(inv_y), max(inv_y)], color='red')  # Diagonal line
+        plt.show()
+
+        plt.plot(self.history['rmse'])
+        plt.xlabel('Epoch')
+        plt.ylabel('RMSE')
+        plt.title('RMSE Over Time')
+        plt.show()
+
+
     def get_model(self):
         return self.model
     
-    # ADSf
+
         
