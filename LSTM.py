@@ -145,6 +145,7 @@ class MyLSTM():
         return self.model
     
     def save_model(self, path):
+        path = 'outputs/' + path
         if not path.endswith(('.keras', '.h5')):
             path += '.keras'
         self.model.save(path)
