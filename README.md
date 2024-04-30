@@ -36,14 +36,14 @@ Predicting energy consumption is vital for effective energy management, enabling
 usage: main.py [-h] [-show_data] [-eda] [-lag LAG] [-split SPLIT] [-save_model SAVE_MODEL] file_path
 
 positional arguments:
-  file_path             Path to the data file
+    file_path             Path to the data file
 
 optional arguments:
-  -h, --help             show this help message and exit
-  -show_data             Flag to enable displaying data in CLI and saving residual plots
-  -eda                   Flag to enable EDA
-  -lag LAG               Number of lag features
-  -split SPLIT           Fraction for train/test split
-  -save_model SAVE_MODEL Flag to enable saving the model to a specified folder name
+    -h, --help             show this help message and exit
+    -show_data             Flag to enable displaying data in CLI and saving residual plots
+    -eda                   Flag to enable EDA
+    -lag LAG               Number of lag features
+    -split SPLIT           Fraction for train/test split
+    -save_model SAVE_MODEL Flag to enable saving the model to a specified folder name
 
 An example would be: `python3 main.py data\household_power_consumption.txt -lag 3 -show_data` which would create 3 lag features for each input featue, as well as print data in the CLI and safe detail plots.
