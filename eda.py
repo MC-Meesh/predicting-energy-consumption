@@ -3,6 +3,7 @@ import utils
 import matplotlib.pyplot as plt
 import pandas as pd
 import math
+import seaborn as sns
 
 class DataFramePlotter:
     def __init__(self, df, x_column):
