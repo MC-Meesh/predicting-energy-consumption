@@ -61,6 +61,11 @@ class MyLSTM():
         return history
 
     def predict(self, scaler):
+
+        '''
+        Method resembles the following snippet from Kaggle:
+        https://www.kaggle.com/code/cuge1995/lstm-for-household-electric-power-cb225cfe-1?scriptVersionId=14243064&cellId=13
+        '''
         # Get the number of features
         n_features = self.X_test.shape[2]
 
@@ -92,8 +97,8 @@ class MyLSTM():
         times = range(len(self.y_test))
 
         plt.figure(figsize=(18, 6)) # Need a larger figure size for the plot
-        plt.plot(times, inv_y, marker='.', color='blue', label="actual")
-        plt.plot(times, inv_yhat, marker='.', color='orange', label="prediction")
+        plt.plot(times, inv_y, marker='.', color=(38/255, 170/255, 231/255), label="actual")
+        plt.plot(times, inv_yhat, marker='.', color=(231/255, 146/255, 38/255), label="prediction")
         plt.ylabel('Global_active_power', size=15)
         plt.xlabel('Time step', size=15)
         plt.legend(fontsize=15)
