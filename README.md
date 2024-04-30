@@ -48,4 +48,4 @@ optional arguments:
     -save_model SAVE_MODEL Flag to enable saving the model to a specified folder name
 ```
 
-An example would be: `python3 main.py data\household_power_consumption.txt -show_data -eda -lag 3` which would read the data from *data\household_power_consumption.txt*, perform some eda on the raw data, print data in the CLI and save detail plots to **outputs/**, and create 3 lag features for each input featue to feed into the LSTM.
+Assuming your terminal is in the root directory of the project, an example would be: `python3 main.py data\household_power_consumption.txt -show_data -eda -lag 3` which would read the data from *data\household_power_consumption.txt*, perform some eda on the raw data, print data in the CLI and save detail plots to **outputs/**, and create 3 lag features for each input featue to feed into the LSTM.
